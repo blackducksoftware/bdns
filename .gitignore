@@ -1,0 +1,18 @@
+# Gradle cache
+/.gradle/
+
+# Build output
+build/
+
+# Eclipse
+.settings/
+.classpath
+.project
+bin/
+
+# Eclipse TestNG plugin output
+test-output/
+
+# IntelliJ files
+/.idea/
+*.iml
