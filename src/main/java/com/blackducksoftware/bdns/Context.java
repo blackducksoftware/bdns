@@ -26,6 +26,4 @@ package com.blackducksoftware.bdns;
  */
 public interface Context {
 
-    // TODO String resolve(Identifier) ?
-
 }

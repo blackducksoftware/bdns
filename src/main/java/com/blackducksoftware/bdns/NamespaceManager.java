@@ -44,177 +44,135 @@ public abstract class NamespaceManager {
     }
 
     /**
-     * Returns the mapping of namespace types to their corresponding manager.
+     * Returns the mapping of namespaces to their corresponding manager.
      */
     private static Map<String, NamespaceManager> registeredNamespaceManagers() {
         return StreamSupport.stream(() -> ServiceLoader.load(NamespaceManager.class).spliterator(), NONNULL, false)
-                .collect(toMap(NamespaceManager::type, m -> m));
+                .collect(toMap(NamespaceManager::namespace, m -> m));
     }
 
     /**
-     * Returns a namespace manager by it type; throwing an {@code IllegalArgumentException} if the type is not
-     * recognized.
+     * Lookup a namespace manager.
+     *
+     * @throws IllegalArgumentException
+     *             if there is no manager registered with the specified namespace.
      */
-    public static NamespaceManager get(String value) {
-        return Optional.ofNullable(NAMESPACE_MANAGERS.get(toLowerCase(value)))
-                .orElseThrow(() -> new IllegalArgumentException("unrecognized namespace: " + value));
+    public static NamespaceManager get(String namespace) {
+        return Optional.ofNullable(NAMESPACE_MANAGERS.get(namespace.toLowerCase()))
+                .orElseThrow(() -> new IllegalArgumentException("unrecognized namespace: " + namespace));
     }
 
     /**
-     * Attempts a lookup and cast of a namespace manager in a single operation.
+     * Attempts a lookup and cast of a namespace manager in a single operation. If the namespace manager's type is
+     * known, this method may be preferable to {@code String} variant as it will expose a type safe manager.
      *
      * @implNote This only works because visible no-argument constructor shares it's underlying implementation.
      */
     public static <M extends NamespaceManager> M get(Class<M> type) {
-        return type.cast(get(namespaceManagerType(type)));
+        return type.cast(get(type.getSimpleName()));
     }
 
     /**
-     * Computes the namespace manager type based on it's implementation class.
+     * The namespace for this manager.
      */
-    private static String namespaceManagerType(Class<? extends NamespaceManager> type) {
-        return type.getSimpleName();
-    }
+    private final String namespace;
 
     /**
-     * Combines namespace lookup and identifier lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).identifier(value)}.
+     * Only visible for special namespace managers whose implementation is generic for multiple types.
      */
-    public static Identifier identifier(String namespace, Object value) {
-        return get(namespace).identifier(value);
-    }
-
-    /**
-     * Combines namespace lookup and context lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).context(value)}.
-     */
-    public static Context context(String namespace, Object value) {
-        return get(namespace).context(value);
-    }
-
-    /**
-     * Combines namespace lookup and default context lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).defaultContext()}.
-     */
-    public static Context defaultContext(String namespace) {
-        return get(namespace).defaultContext();
-    }
-
-    /**
-     * Combines namespace lookup and scope lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).scope(value)}.
-     */
-    public static Scope scope(String namespace, Object value) {
-        return get(namespace).scope(value);
-    }
-
-    /**
-     * Combines namespace lookup and version lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).version(value)}.
-     */
-    public static Version version(String namespace, Object value) {
-        return get(namespace).version(value);
-    }
-
-    /**
-     * Combines namespace lookup and version range lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).versionRange(value)}.
-     */
-    public static VersionRange versionRange(String namespace, Object value) {
-        return get(namespace).versionRange(value);
-    }
-
-    /**
-     * Combines namespace lookup and package URL lookup in a single operation.
-     *
-     * @implSpec Same as {@code get(namespace).packageUrl(value)}.
-     */
-    public static String packageUrl(String namespace, Object identifier, Object context) {
-        return get(namespace).packageUrl(identifier, context);
-    }
-
-    /**
-     * The namespace manager type.
-     */
-    private final String type;
-
-    /**
-     * Only visible for special namespace managers in this package.
-     */
-    NamespaceManager(String type) {
-        this.type = toLowerCase(type);
+    NamespaceManager(String namespace) {
+        this.namespace = namespace.toLowerCase();
     }
 
     protected NamespaceManager() {
-        this.type = toLowerCase(namespaceManagerType(getClass()));
+        this.namespace = getClass().getSimpleName().toLowerCase();
     }
 
     /**
      * Returns this namespace manager's type.
      */
-    public final String type() {
-        return type;
+    public final String namespace() {
+        // By convention this will be the lower case simple name of the manager
+        return namespace;
     }
 
     // TODO Have things like "display name", "description", "URL list", etc.
 
-    // @apiNote Accepts an `Object` to allow for the possibility of cross namespace conversion or assisted type casts.
-
-    public abstract Identifier identifier(Object value);
-
-    public abstract Context context(Object value);
-
-    public abstract Context defaultContext();
-
-    public abstract Scope scope(Object value);
-
-    public abstract Version version(Object value);
-
-    public abstract VersionRange versionRange(Object value);
-
-    // TODO Does this just belong on the context? It does need the `type()` value from the manager...
-    public abstract String packageUrl(Object identifier, Object context);
-    // TODO What about parsing, e.g. `void fromPackageUrl(String purl, BiConsumer<Identifier, Context> action)`?
+    /**
+     * Creates a new identifier in the specified context.
+     *
+     * @implNote If the parsed context is equivalent to the default context for this namespace,
+     *           the resulting identifier should return an empty context.
+     *
+     * @param identifier
+     *            the identifier to be parsed
+     * @param context
+     *            the context to be parsed
+     * @return the namespace specific representation of the identifier and context
+     * @throws NullPointerException
+     *             if either the supplied identifier or context is {@code null}
+     * @throws IllegalArgumentException
+     *             if the supplied identifier or context cannot be parsed
+     */
+    public abstract Identifier identifier(CharSequence identifier, CharSequence context);
 
     /**
-     * Returns the supplied character sequence with all ASCII upper case characters replaced with their lower case
-     * equivalents. Generally more efficient then {@code String.toLowerCase} as it only considers a small range of
-     * characters to be eligible for case changes.
+     * Creates a new identifier in the default context.
+     *
+     * @param identifier
+     *            the identifier to be parsed
+     * @return the namespace specific representation of the identifier
+     * @throws NullPointerException
+     *             if the supplied identifier is {@code null}
+     * @throws IllegalArgumentException
+     *             if the supplied identifier cannot be parsed
      */
-    protected static String toLowerCase(CharSequence value) {
-        int i = 0, len = value.length();
-        char[] result;
-        if (value instanceof String) {
-            // Optimize the String path so we can just return the input if it is already lower case
-            for (; i < len; ++i) {
-                char c = value.charAt(i);
-                if ((c >= 'A') && (c <= 'Z')) {
-                    break;
-                }
-            }
-            if (i == len) {
-                return (String) value;
-            } else {
-                result = ((String) value).toCharArray();
-            }
-        } else {
-            result = new char[value.length()];
-        }
+    public abstract Identifier identifier(CharSequence identifier);
 
-        // At this point we are working with a copy
-        for (; i < len; ++i) {
-            char c = value.charAt(i);
-            result[i] = (c >= 'A') && (c <= 'Z') ? (char) (c ^ 0x20) : c;
-        }
-        return String.valueOf(result);
-    }
+    /**
+     * Returns the default context for this namespace.
+     *
+     * @return the possibly {@code null} default context
+     */
+    public abstract Context defaultContext();
 
-    // TODO Percent encoding method(s)
+    /**
+     * Creates a new version.
+     *
+     * @param version
+     *            the version to be parsed
+     * @return the namespace specific representation of the version
+     * @throws NullPointerException
+     *             if the supplied version is {@code null}
+     * @throws IllegalArgumentException
+     *             if the supplied version cannot be parsed
+     */
+    public abstract Version version(CharSequence version);
+
+    /**
+     * Creates a new version range.
+     *
+     * @param versionRange
+     *            the version range to be parsed
+     * @return the namespace specific representation of the version range
+     * @throws NullPointerException
+     *             if the supplied version range is {@code null}
+     * @throws IllegalArgumentException
+     *             if the supplied version range cannot be parsed
+     */
+    public abstract VersionRange versionRange(CharSequence versionRange);
+
+    /**
+     * Creates a new scope.
+     *
+     * @param scope
+     *            the scope to be parsed
+     * @return the namespace specific representation of the scope
+     * @throws NullPointerException
+     *             if the supplied scope is {@code null}
+     * @throws IllegalArgumentException
+     *             if the supplied scope cannot be parsed
+     */
+    public abstract Scope scope(CharSequence scope);
 
 }

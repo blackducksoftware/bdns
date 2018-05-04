@@ -15,7 +15,9 @@
  */
 package com.blackducksoftware.bdns;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A component identifier. Each namespace will have specific rules about the syntax and decomposition of its
@@ -30,9 +32,17 @@ import java.util.List;
 public interface Identifier {
 
     /**
-     * Returns the decomposed representation of this identifier as an unmodifiable list of parts. The resulting list
-     * will at least contain the {@code toString} representation.
+     * Returns the context associated with this identifier. An empty return value indicates the default namespace; for
+     * namespace managers which do not support a context, this will always be empty.
      */
-    List<String> toList();
+    Optional<? extends Context> getContext();
+
+    /**
+     * Returns the decomposed representation of this identifier as an unmodifiable list of parts. The resulting list
+     * will never be empty.
+     */
+    default List<String> toList() {
+        return Collections.singletonList(toString());
+    }
 
 }
