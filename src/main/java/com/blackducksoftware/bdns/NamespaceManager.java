@@ -99,22 +99,24 @@ public abstract class NamespaceManager {
     // TODO Have things like "display name", "description", "URL list", etc.
 
     /**
-     * Creates a new identifier in the specified context.
+     * Returns the default context for this namespace.
      *
-     * @implNote If the parsed context is equivalent to the default context for this namespace,
-     *           the resulting identifier should return an empty context.
+     * @return the possibly {@code null} default context
+     */
+    public abstract Context defaultContext();
+
+    /**
+     * Creates a new context.
      *
-     * @param identifier
-     *            the identifier to be parsed
      * @param context
      *            the context to be parsed
-     * @return the namespace specific representation of the identifier and context
+     * @return the namespace specific representation of the context
      * @throws NullPointerException
-     *             if either the supplied identifier or context is {@code null}
+     *             if the supplied context is {@code null}
      * @throws IllegalArgumentException
-     *             if the supplied identifier or context cannot be parsed
+     *             if the supplied context cannot be parsed
      */
-    public abstract Identifier identifier(CharSequence identifier, CharSequence context);
+    public abstract Context context(CharSequence context);
 
     /**
      * Creates a new identifier in the default context.
@@ -128,13 +130,6 @@ public abstract class NamespaceManager {
      *             if the supplied identifier cannot be parsed
      */
     public abstract Identifier identifier(CharSequence identifier);
-
-    /**
-     * Returns the default context for this namespace.
-     *
-     * @return the possibly {@code null} default context
-     */
-    public abstract Context defaultContext();
 
     /**
      * Creates a new version.
@@ -161,6 +156,13 @@ public abstract class NamespaceManager {
      *             if the supplied version range cannot be parsed
      */
     public abstract VersionRange versionRange(CharSequence versionRange);
+
+    /**
+     * Returns the default scope for this namespace.
+     *
+     * @return the possibly {@code null} default scope
+     */
+    public abstract Scope defaultScope();
 
     /**
      * Creates a new scope.

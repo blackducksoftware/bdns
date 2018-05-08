@@ -15,13 +15,16 @@
  */
 package com.blackducksoftware.bdns;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * A component identifier. Each namespace will have specific rules about the syntax and decomposition of its
- * identifiers.
+ * A component identifier. Identifiers are usually associated with the creation of software project and not the usage
+ * from another project; for example an identifier would correspond to the GAV defined at the top level of a Maven POM
+ * (and <em>not</em> the GAV from the dependencies section).
+ * <p>
+ * Each namespace will have specific rules about the syntax of its identifiers; namespace managers need only provide
+ * minimal decomposition (e.g. extraction of the version portion of the identifier). Individual namespace specific
+ * implementations may provide more detailed identifier decomposition.
  *
  * @implNote Identifiers should have static {@code valueOf(CharSequence)} methods that are expected to be produce an
  *           equivalent object from it's {@code toString} representation. If the identifier decomposition is
@@ -32,17 +35,11 @@ import java.util.Optional;
 public interface Identifier {
 
     /**
-     * Returns the context associated with this identifier. An empty return value indicates the default namespace; for
-     * namespace managers which do not support a context, this will always be empty.
+     * Extracts the version portion of this identifier. The result may be empty if this identifier does not contain any
+     * version information or if the namespace itself does not distinguish between versions.
+     *
+     * @return the version, if any, associated with this identifier
      */
-    Optional<? extends Context> getContext();
-
-    /**
-     * Returns the decomposed representation of this identifier as an unmodifiable list of parts. The resulting list
-     * will never be empty.
-     */
-    default List<String> toList() {
-        return Collections.singletonList(toString());
-    }
+    Optional<? extends Version> getVersion();
 
 }
