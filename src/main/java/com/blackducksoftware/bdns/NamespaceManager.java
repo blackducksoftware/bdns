@@ -99,13 +99,6 @@ public abstract class NamespaceManager {
     // TODO Have things like "display name", "description", "URL list", etc.
 
     /**
-     * Returns the default context for this namespace.
-     *
-     * @return the possibly {@code null} default context
-     */
-    public abstract Context defaultContext();
-
-    /**
      * Creates a new context.
      *
      * @param context
@@ -156,13 +149,6 @@ public abstract class NamespaceManager {
      *             if the supplied version range cannot be parsed
      */
     public abstract VersionRange versionRange(CharSequence versionRange);
-
-    /**
-     * Returns the default scope for this namespace.
-     *
-     * @return the possibly {@code null} default scope
-     */
-    public abstract Scope defaultScope();
 
     /**
      * Creates a new scope.
