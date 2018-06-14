@@ -46,10 +46,10 @@ if (System.getenv('TRAVIS_REPO_SLUG') == 'blackducksoftware/bdns'
 				sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
 				jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 			}
-			task('publish').dependsOn tasks.coveralls
+			publish.dependsOn tasks.coveralls
 			
 			// Run the root report from `script:` instead of `after_success:`
-			task('check').dependsOn jacocoRootReport
+			check.dependsOn jacocoRootReport
 		}
 	}
 
