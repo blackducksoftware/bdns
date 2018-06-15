@@ -1,4 +1,4 @@
-# Black Duck I/O
+# Black Duck Namespaces
 
 [![Build Status](https://travis-ci.org/blackducksoftware/bdns.svg?branch=master)](https://travis-ci.org/blackducksoftware/bdns)
 [![Download](https://api.bintray.com/packages/bds/oss/bdns/images/download.svg)](https://bintray.com/bds/oss/bdns/_latestVersion)
