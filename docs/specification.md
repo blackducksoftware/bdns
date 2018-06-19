@@ -34,125 +34,167 @@ A dependency to another component. Dependencies are similar to identifiers in th
 ## Maven
 
 ```ABNF
-namespace    = "maven"
-```
+namespace                = "maven"
+namespace-context        = repository
+namespace-version        = version
+namespace-version-range  = version-requirement
+namespace-scope          = scope
+namespace-identifier     = coordinate
 
-### Context
-See [maven-dependency-get][]
-
-```ABNF
+; See [maven-dependency-get]
 repository   = ( repo-id "::" [ repo-layout ] "::" repo-url ) / repo-url
 repo-id      = token
 repo-layout  = "" / "default" / "legacy" / token
 repo-url     = URI-reference
-```
 
-### Version
-Only a sort order is defined, see [maven-version-order][]
+; Only a sort order is defined, see [maven-version-order]
+version      = token
 
-```ABNF
-version     = token
-```
-
-### Version Range
-See [maven-version-requirement][]
-  
-```ABNF
+; See [maven-version-requirement]
 version-requirement      = version-rqmt-spec / ( version-rqmt-spec "," version-rqmt-spec )
 version-rqmt-spec        = version-rqmt-soft / version-rqmt-hard / version-rqmt-range
 version-rqmt-soft        = version
 version-rqmt-hard        = "[" version "]"
 version-rqmt-range       = ( "[" / "(" ) version-rqmt-range-spec ( ")" / "]" )
 version-rqmt-range-spec  = ( "," version ) / ( version "," version ) / ( version ",")
-```
 
-### Scope
-See [maven-dependencies][]
-
-```ABNF
+; See [maven-dependencies]
 scope        = "compile" / "provided" / "runtime" / "test" / "system"
-```
 
-### Identifier
-See [maven-coordinates][]
-
-```ABNF
+; See [maven-coordinates]
 coordinate   = group-id ":" artifact-id [ ":" packaging [ ":" classifier ] ] ":" version
 group-id     = token
 artifact-id  = token
 packaging    = "pom" / "jar" / "maven-plugin" / "ejb" / "war" / "ear" / "rar" / "par" / token
 classifier   = token
-```
 
-### Dependency
-There is no standard encoded form for a dependency
-See [maven-dependencies][]
-
-```ABNF
+; There is no standard encoded form for a dependency, see [maven-dependencies]
 type         = "jar" / token
 system-path  = local-path
 optional     = BOOLEAN
 ```
 
-# Appendix A: Registry Template
+## Reserved Namespace Identifiers
+The following list of namespace identifiers is reserved for future definition by this specification.
 
-Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types. An additional `namespace` rule is used to identify the namespace (if multiple aliases are given, the first MUST be the canonical). Rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
+* `alpine`
+* `anaconda`
+* `android`
+* `apache`
+* `apache_software`
+* `arch`
+* `atom`
+* `automotive_linux`
+* `bdhub`
+* `bdsuite`
+* `bitbucket`
+* `bower`
+* `brew`
+* `buildroot`
+* `cargo`
+* `carthage`
+* `centos`
+* `chef`
+* `clearlinux`
+* `clojars`
+* `cocoapods`
+* `codeplex`
+* `codeplex_group`
+* `composer`
+* `conan`
+* `coreos`
+* `cpan`
+* `cpe`
+* `cran`
+* `crystal`
+* `ctan`
+* `deb`
+* `debian`
+* `docker`
+* `drupal`
+* `dtype`
+* `dub`
+* `ebuild`
+* `eclipse`
+* `efisbot`
+* `elm`
+* `fedora`
+* `freedesktop_org`
+* `gem`
+* `generic`
+* `gitcafe`
+* `gitea`
+* `github`
+* `gitlab`
+* `gitorious`
+* `gnu`
+* `goget`
+* `golang`
+* `googlecode`
+* `guix`
+* `hackage`
+* `haxe`
+* `hex`
+* `java_net`
+* `julia`
+* `kde_org`
+* `launchpad`
+* `long_tail`
+* `lua`
+* `melpa`
+* `meteor`
+* `nim`
+* `nix`
+* `npm`
+* `npmjs`
+* `nuget`
+* `opam`
+* `opensuse`
+* `openwrt`
+* `osgi`
+* `p2`
+* `packagist`
+* `pear`
+* `pecl`
+* `perl6`
+* `platformio`
+* `protocode_sc`
+* `pub`
+* `puppet`
+* `pypi`
+* `redhat`
+* `rpm`
+* `rubyforge`
+* `rubygems`
+* `runtime`
+* `sourceforge`
+* `sourceforge_jp`
+* `sublime`
+* `swift`
+* `tianocore`
+* `ubuntu`
+* `vim`
+* `wordpress`
+* `yocto`
+
+# Appendix A: Registry Template
+Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types, by convention only rules starting with `namespace-` are exported. A `namespace` rule is used to identify the namespace: identifiers MUST conform to the `token` rule of the "Core Rules" Appendix and if multiple identifiers options are given, the first MUST be the canonical. Rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
 
 Each registration should start with this template:
 
-```
+```TEXT
     ## {Namespace Name}
 
     ```ABNF
-    namespace = {namespace identifier}
-    ```
+    namespace                = {namespace identifier rule}
+    namespace-context        = {context rule}
+    namespace-version        = {version rule}
+    namespace-version-range  = {version range rule}
+    namespace-scope          = {scope rule}
+    namespace-identifier     = {identifier rule}
+    namespace-dependency     = {dependency rule}
     
-    ### Context
-    {optional notes}
-    See [{optional reference}][]
-    
-    ```ABNF
-    {context ABNF}
-    ```
-
-    ### Version
-    {optional notes}
-    See [{optional reference}][]
-    
-    ```ABNF 
-    {version ABNF}
-    ```
-    
-    ### Version Range
-    {optional notes}
-    See [{optional reference}][]
-    
-    ```ABNF 
-    {version range ABNF}
-    ```
-
-    ### Scope
-    {optional notes}
-    See [{optional reference}][]
-    
-    ```ABNF 
-    {scope ABNF}
-    ```
-
-    ### Identifier
-    {optional notes}
-    See [{optional reference}][]
-    
-    ```ABNF 
-    {identifier ABNF}
-    ```
-
-    ### Dependency
-    {optional notes}
-    See [{optional reference}][]
-    
-    ```ABNF 
-    {dependency ABNF}
+    {additional rules as necessary}
     ```
 ```
 
@@ -164,6 +206,11 @@ token          = 1*( ALPHA / DIGIT / "." / "-" / "_" / "+" ) ; TODO Anything els
 URI-reference  = <see [RFC3986], Section 4.1>
 local-path     = <see [RFC8089], Section 2>
 ```
+
+# Appendix B: Collected Namespace Identifiers
+
+* `maven`
+
 
 [RFC3986]: https://tools.ietf.org/html/rfc3986 "Uniform Resource Identifier (URI): Generic Syntax"
 
