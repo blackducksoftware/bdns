@@ -34,7 +34,7 @@ A dependency to another component. Dependencies are similar to identifiers in th
 ## Maven
 
 ```ABNF
-namespace                = "maven"
+namespace-token          = "maven"
 namespace-context        = repository
 namespace-version        = version
 namespace-version-range  = version-requirement
@@ -74,8 +74,8 @@ system-path  = local-path
 optional     = BOOLEAN
 ```
 
-## Reserved Namespace Identifiers
-The following list of namespace identifiers is reserved for future definition by this specification.
+## Reserved Namespace Tokens
+The following list of namespace tokens is reserved for future definition by this specification.
 
 * `alpine`
 * `anaconda`
@@ -178,7 +178,11 @@ The following list of namespace identifiers is reserved for future definition by
 * `yocto`
 
 # Appendix A: Registry Template
-Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types, by convention only rules starting with `namespace-` are exported. A `namespace` rule is used to identify the namespace: identifiers MUST conform to the `token` rule of the "Core Rules" Appendix and if multiple identifiers options are given, the first MUST be the canonical. Rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
+Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types, by convention only rules starting with `namespace-` are exported.
+
+A `namespace-token` rule is used to define an identifying token for the namespace. Namespace tokens MUST conform to the `token` rule of the "Core Rules" Appendix. Namespace tokens MUST NOT be ambiguious across registrations. If the namespace token is defined using an alternative list, the first token MUST be canonical.
+
+Supporting rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
 
 Each registration should start with this template:
 
@@ -186,7 +190,7 @@ Each registration should start with this template:
     ## {Namespace Name}
 
     ```ABNF
-    namespace                = {namespace identifier rule}
+    namespace-token          = {namespace token rule}
     namespace-context        = {context rule}
     namespace-version        = {version rule}
     namespace-version-range  = {version range rule}
@@ -207,7 +211,7 @@ URI-reference  = <see [RFC3986], Section 4.1>
 local-path     = <see [RFC8089], Section 2>
 ```
 
-# Appendix B: Collected Namespace Identifiers
+# Appendix B: Collected Namespace Tokens
 
 * `maven`
 
