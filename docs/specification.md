@@ -33,43 +33,137 @@ A dependency to another component. Dependencies are similar to identifiers in th
 
 ## Maven
 
-    namespace = "maven"
+```ABNF
+namespace    = "maven"
+```
 
-    ; Context [maven-dependency-get]
-    repository   = ( repo-id "::" [ repo-layout ] "::" repo-url ) / repo-url
-    repo-id      = token
-    repo-layout  = "" / "default" / "legacy" / token
-    repo-url     = URI-reference
+### Context
+See [maven-dependency-get][]
 
-    ; Version
-    ; Note: Only a sort order is defined, see [maven-version-order]
-    version     = token
+```ABNF
+repository   = ( repo-id "::" [ repo-layout ] "::" repo-url ) / repo-url
+repo-id      = token
+repo-layout  = "" / "default" / "legacy" / token
+repo-url     = URI-reference
+```
 
-    ; Version Range [maven-version-requirement]
-    version-requirement      = version-rqmt-spec / ( version-rqmt-spec "," version-rqmt-spec )
-    version-rqmt-spec        = version-rqmt-soft / version-rqmt-hard / version-rqmt-range
-    version-rqmt-soft        = version
-    version-rqmt-hard        = "[" version "]"
-    version-rqmt-range       = ( "[" / "(" ) version-rqmt-range-spec ( ")" / "]" )
-    version-rqmt-range-spec  = ( "," version ) / ( version "," version ) / ( version ",")
+### Version
+Only a sort order is defined, see [maven-version-order][]
 
-    ; Scope [maven-dependencies]
-    scope        = "compile" / "provided" / "runtime" / "test" / "system"
+```ABNF
+version     = token
+```
 
-    ; Identifier [maven-coordinates]
-    coordinate   = group-id ":" artifact-id [ ":" packaging [ ":" classifier ] ] ":" version
-    group-id     = token
-    artifact-id  = token
-    packaging    = "pom" / "jar" / "maven-plugin" / "ejb" / "war" / "ear" / "rar" / "par" / token
-    classifier   = token
+### Version Range
+See [maven-version-requirement][]
+  
+```ABNF
+version-requirement      = version-rqmt-spec / ( version-rqmt-spec "," version-rqmt-spec )
+version-rqmt-spec        = version-rqmt-soft / version-rqmt-hard / version-rqmt-range
+version-rqmt-soft        = version
+version-rqmt-hard        = "[" version "]"
+version-rqmt-range       = ( "[" / "(" ) version-rqmt-range-spec ( ")" / "]" )
+version-rqmt-range-spec  = ( "," version ) / ( version "," version ) / ( version ",")
+```
 
-    ; Dependency [maven-dependencies]
-    ; Note: There is no standard encoded form for a dependency
-    type         = "jar" / token
-    system-path  = local-path
-    optional     = BOOLEAN
+### Scope
+See [maven-dependencies][]
 
-# References
+```ABNF
+scope        = "compile" / "provided" / "runtime" / "test" / "system"
+```
+
+### Identifier
+See [maven-coordinates][]
+
+```ABNF
+coordinate   = group-id ":" artifact-id [ ":" packaging [ ":" classifier ] ] ":" version
+group-id     = token
+artifact-id  = token
+packaging    = "pom" / "jar" / "maven-plugin" / "ejb" / "war" / "ear" / "rar" / "par" / token
+classifier   = token
+```
+
+### Dependency
+There is no standard encoded form for a dependency
+See [maven-dependencies][]
+
+```ABNF
+type         = "jar" / token
+system-path  = local-path
+optional     = BOOLEAN
+```
+
+# Appendix A: Registry Template
+
+Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types. An additional `namespace` rule is used to identify the namespace (if multiple aliases are given, the first MUST be the canonical). Rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
+
+Each registration should start with this template:
+
+```
+    ## {Namespace Name}
+
+    ```ABNF
+    namespace = {namespace identifier}
+    ```
+    
+    ### Context
+    {optional notes}
+    See [{optional reference}][]
+    
+    ```ABNF
+    {context ABNF}
+    ```
+
+    ### Version
+    {optional notes}
+    See [{optional reference}][]
+    
+    ```ABNF 
+    {version ABNF}
+    ```
+    
+    ### Version Range
+    {optional notes}
+    See [{optional reference}][]
+    
+    ```ABNF 
+    {version range ABNF}
+    ```
+
+    ### Scope
+    {optional notes}
+    See [{optional reference}][]
+    
+    ```ABNF 
+    {scope ABNF}
+    ```
+
+    ### Identifier
+    {optional notes}
+    See [{optional reference}][]
+    
+    ```ABNF 
+    {identifier ABNF}
+    ```
+
+    ### Dependency
+    {optional notes}
+    See [{optional reference}][]
+    
+    ```ABNF 
+    {dependency ABNF}
+    ```
+```
+
+## Appendix A.1: Core Rules
+
+```ABNF
+BOOLEAN        = "true" / "false"
+token          = 1*( ALPHA / DIGIT / "." / "-" / "_" / "+" ) ; TODO Anything else?
+URI-reference  = <see [RFC3986], Section 4.1>
+local-path     = <see [RFC8089], Section 2>
+```
 
 [RFC3986]: https://tools.ietf.org/html/rfc3986 "Uniform Resource Identifier (URI): Generic Syntax"
 
@@ -86,42 +180,3 @@ A dependency to another component. Dependencies are similar to identifiers in th
 [maven-coordinates]: https://maven.apache.org/pom.html#Maven_Coordinates "POM Reference / Maven Coordinates"
 
 [maven-dependencies]: https://maven.apache.org/pom.html#Dependencies "POM Reference / Dependencies"
-
-# Appendix A: Registry Template
-
-Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types. An additional `namespace` rule is used to identify the namespace (if multiple aliases are given, the first MUST be the canonical). Rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
-
-Each registration should start with this template:
-
-    namespace = {namespace identifier}
-    
-    ; Context [{optional reference}]
-    ; Note: {optional note}
-    {context ABNF}
-
-    ; Version [{optional reference}]
-    ; Note: {optional note}
-    {version ABNF}
-
-    ; Version Range [{optional reference}]
-    ; Note: {optional note}
-    {version range ABNF}
-
-    ; Scope [{optional reference}]
-    ; Note: {optional note}
-    {scope ABNF}
-
-    ; Identifier [{optional reference}]
-    ; Note: {optional note}
-    {identifier ABNF}
-
-    ; Dependency [{optional reference}]
-    ; Note: {optional note}
-    {dependency ABNF}
-
-## Appendix A.1: Core Rules
-
-    BOOLEAN        = "true" / "false"
-    token          = 1*( ALPHA / DIGIT / "." / "-" / "_" / "+" ) ; TODO Anything else?
-    URI-reference  = <see [RFC3986], Section 4.1>
-    local-path     = <see [RFC8089], Section 2>
