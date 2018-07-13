@@ -15,6 +15,7 @@
  */
 package com.blackducksoftware.bdns;
 
+import static com.blackducksoftware.bdns.ReservedNamespaceManager.reservedNamespaceManagers;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Spliterator.NONNULL;
 import static java.util.stream.Collectors.toMap;
@@ -38,7 +39,9 @@ public abstract class NamespaceManager {
      */
     private static final Map<String, NamespaceManager> NAMESPACE_MANAGERS;
     static {
+        // Order matters, we overwrite by provided functionality (least to most)
         Map<String, NamespaceManager> namespaceManagers = new HashMap<>();
+        namespaceManagers.putAll(reservedNamespaceManagers());
         namespaceManagers.putAll(registeredNamespaceManagers());
         NAMESPACE_MANAGERS = unmodifiableMap(namespaceManagers);
     }
@@ -84,6 +87,10 @@ public abstract class NamespaceManager {
         this.namespace = namespace.toLowerCase();
     }
 
+    /**
+     * No argument construct for sub-classes. Sub-classes are encouraged to deprecate their public no-argument
+     * constructor to provide feedback that it should not be directly invoked.
+     */
     protected NamespaceManager() {
         this.namespace = getClass().getSimpleName().toLowerCase();
     }
