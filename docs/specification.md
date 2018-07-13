@@ -143,7 +143,6 @@ The following list of namespace tokens are reserved for future definition by thi
 * `launchpad`
 * `long_tail`
 * `lua`
-* `maven`
 * `melpa`
 * `meteor`
 * `nim`
