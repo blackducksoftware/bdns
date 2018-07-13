@@ -1,0 +1,4 @@
+# This file contains namespace aliases
+#
+# Comments and blank lines are skipped, format is "alias... type" 
+# e.g. "foo foobar" would make a "foo" namespace manager that forwards requests to the "foobar" manager

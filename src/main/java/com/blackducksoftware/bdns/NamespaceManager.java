@@ -15,6 +15,7 @@
  */
 package com.blackducksoftware.bdns;
 
+import static com.blackducksoftware.bdns.AliasNamespaceManager.aliasNamespaceManagers;
 import static com.blackducksoftware.bdns.ReservedNamespaceManager.reservedNamespaceManagers;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Spliterator.NONNULL;
@@ -42,6 +43,7 @@ public abstract class NamespaceManager {
         // Order matters, we overwrite by provided functionality (least to most)
         Map<String, NamespaceManager> namespaceManagers = new HashMap<>();
         namespaceManagers.putAll(reservedNamespaceManagers());
+        namespaceManagers.putAll(aliasNamespaceManagers());
         namespaceManagers.putAll(registeredNamespaceManagers());
         NAMESPACE_MANAGERS = unmodifiableMap(namespaceManagers);
     }
