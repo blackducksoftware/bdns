@@ -75,7 +75,7 @@ optional     = BOOLEAN
 ```
 
 ## Reserved Namespace Tokens
-The following list of namespace tokens is reserved for future definition by this specification.
+The following list of namespace tokens are reserved for future definition by this specification.
 
 * `alpine`
 * `anaconda`
@@ -111,6 +111,7 @@ The following list of namespace tokens is reserved for future definition by this
 * `deb`
 * `debian`
 * `docker`
+* `dpkg`
 * `drupal`
 * `dtype`
 * `dub`
@@ -125,6 +126,7 @@ The following list of namespace tokens is reserved for future definition by this
 * `gitcafe`
 * `gitea`
 * `github`
+* `github_gist`
 * `gitlab`
 * `gitorious`
 * `gnu`
@@ -141,6 +143,7 @@ The following list of namespace tokens is reserved for future definition by this
 * `launchpad`
 * `long_tail`
 * `lua`
+* `maven`
 * `melpa`
 * `meteor`
 * `nim`
@@ -178,11 +181,9 @@ The following list of namespace tokens is reserved for future definition by this
 * `yocto`
 
 # Appendix A: Registry Template
-Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types, by convention only rules starting with `namespace-` are exported.
+Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types. By convention, only rules starting with `namespace-` are exported. Supporting rules names should use terminology native to the namespace being defined and are considered unique to each registration. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules.
 
 A `namespace-token` rule is used to define an identifying token for the namespace. Namespace tokens MUST conform to the `token` rule of the "Core Rules" Appendix. Namespace tokens MUST NOT be ambiguious across registrations. If the namespace token is defined using an alternative list, the first token MUST be canonical.
-
-Supporting rules names should use terminology native to the namespace being defined. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules; all remaining rules are independent between each registration.
 
 Each registration should start with this template:
 
