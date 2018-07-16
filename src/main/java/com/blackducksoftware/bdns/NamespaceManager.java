@@ -23,8 +23,10 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
 /**
@@ -171,5 +173,73 @@ public abstract class NamespaceManager {
      *             if the supplied scope cannot be parsed
      */
     public abstract Scope scope(CharSequence scope);
+
+    /**
+     * Check to see if the supplied value is a valid context for this namespace manager.
+     *
+     * @param context
+     *            the value to test
+     * @return {@code true} if the value is valid, {@code false} otherwise
+     */
+    public boolean isValidContext(CharSequence context) {
+        return isValid(context, this::context);
+    }
+
+    /**
+     * Check to see if the supplied value is a valid identifier for this namespace manager.
+     *
+     * @param context
+     *            the value to test
+     * @return {@code true} if the value is valid, {@code false} otherwise
+     */
+    public boolean isValidIdentifier(CharSequence identifier) {
+        return isValid(identifier, this::identifier);
+    }
+
+    /**
+     * Check to see if the supplied value is a valid version for this namespace manager.
+     *
+     * @param context
+     *            the value to test
+     * @return {@code true} if the value is valid, {@code false} otherwise
+     */
+    public boolean isValidVersion(CharSequence version) {
+        return isValid(version, this::version);
+    }
+
+    /**
+     * Check to see if the supplied value is a valid version range for this namespace manager.
+     *
+     * @param context
+     *            the value to test
+     * @return {@code true} if the value is valid, {@code false} otherwise
+     */
+    public boolean isValidVersionRange(CharSequence versionRange) {
+        return isValid(versionRange, this::versionRange);
+    }
+
+    /**
+     * Check to see if the supplied value is a valid scope for this namespace manager.
+     *
+     * @param context
+     *            the value to test
+     * @return {@code true} if the value is valid, {@code false} otherwise
+     */
+    public boolean isValidScope(CharSequence scope) {
+        return isValid(scope, this::scope);
+    }
+
+    /*
+     * Helper to test if a supplied input causes a parsing function to throw an {@code IllegalArgumentException}.
+     */
+    private static boolean isValid(CharSequence input, Function<CharSequence, ?> parser) {
+        try {
+            // The parser function MUST NOT return null, it can only throw
+            Objects.requireNonNull(parser.apply(input));
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 
 }
