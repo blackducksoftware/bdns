@@ -160,7 +160,7 @@ The following list of namespace tokens are reserved for future definition by thi
 * `pecl`
 * `perl6`
 * `platformio`
-* `protocode_sc`
+* `protecode_sc`
 * `pub`
 * `puppet`
 * `pypi`
