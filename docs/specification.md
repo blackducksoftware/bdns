@@ -7,7 +7,7 @@ Black Duck Namespaces provides a framework for describing the common functionali
 When describing software components, it is often important to be able to describe the component using the native language of the packaging or distribution systems providing the software. This specification acts as a consolidated reference for describing the native language of the packaging or distribution system and mapping it to a framework of common definitions.
 
 # Namespace Framework
-A "namespace" corresponds to a software distribution mechanism and serves as a container for the defintions of the associated rules and conventions. Each namespace MUST have a single canonical identifier. Some namespaces may have additional aliases which may be used in place of the canonical identifier, such aliases may be provided for backwards compatibility with existing systems or simply to address common alternatives.
+A "namespace" corresponds to a software distribution mechanism and serves as a container for the definitions of the associated rules and conventions. Each namespace MUST have a single canonical identifier. Some namespaces may have additional aliases which may be used in place of the canonical identifier, such aliases may be provided for backwards compatibility with existing systems or simply to address common alternatives.
 
 ## Context
 Generally an identifier is a relative description of a component, a context is the base that is used to produce an absolute identifier. Typically a context will represent either a base URL or a URL template that can be used in conjunction with a (possibly decomposed) identifier to produce a resolvable URL (generally using HTTP); though some systems may simply have simple tokens as a context, requiring lookup tables or other means to produce an absolute identifier.
@@ -185,7 +185,9 @@ The following list of namespace tokens are reserved for future definition by thi
 # Appendix A: Registry Template
 Each registration uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to define the rules for each of the namespace framework types. By convention, only rules starting with `namespace-` are exported. Supporting rules names should use terminology native to the namespace being defined and are considered unique to each registration. All of the [RFC5234] Appendix B.1 core rules are included by reference, as are the core BDNS Appendix A.1 rules.
 
-A `namespace-token` rule is used to define an identifying token for the namespace. Namespace tokens MUST conform to the `token` rule of the "Core Rules" Appendix. Namespace tokens MUST NOT be ambiguious across registrations. If the namespace token is defined using an alternative list, the first token MUST be canonical.
+The `namespace-token` rule is used to define an identifying token for the namespace. Namespace tokens MUST conform to the `token` rule of the "Core Rules" Appendix. Namespace tokens MUST NOT be ambiguous across registrations. If the namespace token is defined using an alternative list, the first token MUST be canonical.
+
+The `namespace-locator` rule is used to define the locator for a component. Locator rules MUST be a subset of the `URI-reference` rule of the "Core Rules" Appendix. Locators can be further specialized, however they must be valid URIs. If a registration does not explicitly define a locator rule, it is assumed to be `URI-reference`.
 
 Each registration should start with this template:
 
