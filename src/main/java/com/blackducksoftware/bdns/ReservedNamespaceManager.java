@@ -158,6 +158,29 @@ public class ReservedNamespaceManager extends NamespaceManager {
         }
     }
 
+    private static class ReservedNamespaceLocator extends ReservedNamespaceObject implements Locator {
+        private ReservedNamespaceLocator(String namespace, CharSequence locator) {
+            super(namespace, locator);
+        }
+
+        // TODO Should these should return the entire string wrapped in a ReservedNamespaceX object?
+
+        @Override
+        public Identifier identifier() {
+            throw new UnsupportedOperationException("Unable to extract identifier from reservered namespace");
+        }
+
+        @Override
+        public Context context() {
+            throw new UnsupportedOperationException("Unable to extract context from reservered namespace");
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof ReservedNamespaceLocator && super.equals(obj);
+        }
+    }
+
     private ReservedNamespaceManager(String type) {
         super(type);
     }
@@ -185,6 +208,11 @@ public class ReservedNamespaceManager extends NamespaceManager {
     @Override
     public Scope scope(CharSequence scope) {
         return new ReservedNamespaceScope(namespace(), scope);
+    }
+
+    @Override
+    public Locator locator(CharSequence locator) {
+        return new ReservedNamespaceLocator(namespace(), locator);
     }
 
 }

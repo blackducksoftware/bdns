@@ -29,6 +29,9 @@ Each namespace will have specific rules about the syntax of its identifiers; nam
 ## Dependency
 A dependency to another component. Dependencies are similar to identifiers in that they are used to identify a requirement to another software project, however dependencies may carry additional information used by the namespace specific resolver.
 
+## Locator
+A locator represents the actual location of an individual package. Using a locator with the appropriate protocol specific resolver, it is possible to obtain a copy of the package or artifact itself. Most often a locator will be represented as a HTTP(S) URI, however other protocols may be used.
+
 # Registry
 
 ## Maven
@@ -197,6 +200,7 @@ Each registration should start with this template:
     namespace-scope          = {scope rule}
     namespace-identifier     = {identifier rule}
     namespace-dependency     = {dependency rule}
+    namespace-locator        = {locator rule}
     
     {additional rules as necessary}
     ```

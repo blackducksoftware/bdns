@@ -175,6 +175,19 @@ public abstract class NamespaceManager {
     public abstract Scope scope(CharSequence scope);
 
     /**
+     * Creates a new locator.
+     *
+     * @param locator
+     *            the locator to be parsed
+     * @return the namespace specific representation of the locator
+     * @throws NullPointerException
+     *             if the supplied locator is {@code null}
+     * @throws IllegalArgumentException
+     *             if the supplied locator cannot be parsed
+     */
+    public abstract Locator locator(CharSequence locator);
+
+    /**
      * Check to see if the supplied value is a valid context for this namespace manager.
      *
      * @param context
@@ -227,6 +240,17 @@ public abstract class NamespaceManager {
      */
     public boolean isValidScope(CharSequence scope) {
         return isValid(scope, this::scope);
+    }
+
+    /**
+     * Check to see if the supplied value is a valid locator for this namespace manager.
+     *
+     * @param locator
+     *            the value to test
+     * @return {@code true} if the value is valid, {@code false} otherwise
+     */
+    public boolean isValidLocator(CharSequence locator) {
+        return isValid(locator, this::locator);
     }
 
     /*

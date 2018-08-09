@@ -102,4 +102,9 @@ public class AliasNamespaceManager extends NamespaceManager {
         return delegate().scope(scope);
     }
 
+    @Override
+    public Locator locator(CharSequence locator) {
+        return delegate().locator(locator);
+    }
+
 }
