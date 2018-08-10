@@ -25,13 +25,6 @@ package com.blackducksoftware.bdns;
 public interface Locator {
 
     /**
-     * Extracts the identifier portion of this locator.
-     *
-     * @return the identifier associated with this locator
-     */
-    Identifier identifier();
-
-    /**
      * Extracts the context portion of this locator.
      *
      * @return the context associated with this locator
@@ -39,8 +32,15 @@ public interface Locator {
     Context context();
 
     /**
+     * Extracts the identifier portion of this locator.
+     *
+     * @return the identifier associated with this locator
+     */
+    Identifier identifier();
+
+    /**
      * Returns this locator as a URI.
-     * 
+     *
      * @return the URI representing this locator.
      */
     String toUriString();
