@@ -38,4 +38,11 @@ public interface Locator {
      */
     Context context();
 
+    /**
+     * Returns this locator as a URI.
+     * 
+     * @return the URI representing this locator.
+     */
+    String toUriString();
+
 }
