@@ -46,4 +46,13 @@ public interface Dependency {
      */
     Optional<? extends Scope> getScope();
 
+    /**
+     * Returns the identifier for a specific version that fulfills this dependency.
+     *
+     * @param version
+     *            the exact version, must be accepted by the {@linkplain #getVersionRange() version range}
+     * @return the identifier for the supplied version
+     */
+    Identifier resolve(Version version);
+
 }

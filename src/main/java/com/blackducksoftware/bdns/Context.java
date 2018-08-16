@@ -26,4 +26,13 @@ package com.blackducksoftware.bdns;
  */
 public interface Context {
 
+    /**
+     * Resolves the supplied identifier into a locator.
+     *
+     * @param identifier
+     *            the identifier to resolve against this context
+     * @return the context relative locator for the supplied identifier
+     */
+    Locator locate(Identifier identifier);
+
 }

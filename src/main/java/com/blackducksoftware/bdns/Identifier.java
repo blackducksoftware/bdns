@@ -42,4 +42,11 @@ public interface Identifier {
      */
     Optional<? extends Version> getVersion();
 
+    /**
+     * Returns this identifier without the version portion.
+     *
+     * @return the identifier without a version, or this identifier if the version is already empty
+     */
+    Identifier withoutVersion();
+
 }

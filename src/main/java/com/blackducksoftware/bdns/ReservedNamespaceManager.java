@@ -94,6 +94,11 @@ public class ReservedNamespaceManager extends NamespaceManager {
         }
 
         @Override
+        public Locator locate(Identifier identifier) {
+            throw new UnsupportedOperationException("cannot resolve locator for reserved namespace");
+        }
+
+        @Override
         public boolean equals(Object obj) {
             return obj instanceof ReservedNamespaceContext && super.equals(obj);
         }
@@ -107,6 +112,11 @@ public class ReservedNamespaceManager extends NamespaceManager {
         @Override
         public Optional<? extends Version> getVersion() {
             return Optional.empty();
+        }
+
+        @Override
+        public ReservedNamespaceIdentifier withoutVersion() {
+            return this;
         }
 
         @Override
