@@ -39,3 +39,17 @@ jar {
 				   'Specification-Vendor': 'Synopsys, Inc.')
 	}
 }
+
+task sourceJar(type: Jar) {
+	from sourceSets.main.allJava
+	classifier 'sources'
+}
+
+publishing {
+	publications {
+		myPublication(MavenPublication) {
+			from components.java
+			artifact sourceJar
+		}
+	}
+}

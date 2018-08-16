@@ -25,25 +25,16 @@ if (System.getenv('TRAVIS_REPO_SLUG') == 'blackducksoftware/bdns'
 
 	// Run Jacoco coverage and publish to Coveralls
 	projectsEvaluated {
-		allprojects {
-			apply plugin: 'jacoco'
-		}
-		
 		rootProject {
-			// Generate the aggregate report from all the subprojects
+			apply plugin: 'jacoco'
 			apply plugin: org.kt3k.gradle.plugin.CoverallsPlugin
 			jacocoTestReport {
 				sourceDirectories = files(sourceSets.main.allSource.srcDirs)
 				classDirectories = files(sourceSets.main.output)
-				executionData = files(jacocoTestReport.executionData)
 				reports {
 					html.enabled = false
 					xml.enabled = true
 				}
-			}
-			coveralls {
-				sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
-				jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 			}
 			publish.dependsOn tasks.coveralls
 			
@@ -58,51 +49,43 @@ if (System.getenv('TRAVIS_REPO_SLUG') == 'blackducksoftware/bdns'
 			// Snapshot version goes to oss.jfrog.org
 			apply plugin: org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin
 			
-			artifactoryPublish.skip = true
-			
-			subprojects {
-				apply plugin: org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin
-		
-				artifactory {
-					publish {
-						contextUrl = 'https://oss.jfrog.org/artifactory'
-						repository {
-							repoKey = 'oss-snapshot-local'
-							username = System.getenv('BINTRAY_USER')
-							password = System.getenv('BINTRAY_KEY')
-						}
-						defaults {
-							publications('nebula')
-						}
+			artifactory {
+				publish {
+					contextUrl = 'https://oss.jfrog.org/artifactory'
+					repository {
+						repoKey = 'oss-snapshot-local'
+						username = System.getenv('BINTRAY_USER')
+						password = System.getenv('BINTRAY_KEY')
+					}
+					defaults {
+						publications('myPublication')
 					}
 				}
-		
-				afterEvaluate {
-					publish.dependsOn artifactoryPublish
-					
-					jar.manifest.attributes['Implementation-Version'] += '+build.' + System.getenv('TRAVIS_BUILD_NUMBER')
-				}
+			}
+	
+			afterEvaluate {
+				publish.dependsOn artifactoryPublish
+				
+				jar.manifest.attributes['Implementation-Version'] += '+build.' + System.getenv('TRAVIS_BUILD_NUMBER')
 			}
 		} else {
 			// Release version goes to bintray.com
-			subprojects {
-				apply plugin: com.jfrog.bintray.gradle.BintrayPlugin
-		
-				bintray {
-					user = System.getenv('BINTRAY_USER')
-					key = System.getenv('BINTRAY_KEY')
-					publications = [ 'nebula' ]
-					publish = true
-					pkg {
-						repo = 'oss'
-						name = 'bdns'
-						userOrg = 'bds'
-					}
+			apply plugin: com.jfrog.bintray.gradle.BintrayPlugin
+	
+			bintray {
+				user = System.getenv('BINTRAY_USER')
+				key = System.getenv('BINTRAY_KEY')
+				publications = [ 'myPublication' ]
+				publish = true
+				pkg {
+					repo = 'oss'
+					name = 'bdns'
+					userOrg = 'bds'
 				}
-		
-				afterEvaluate {
-					publish.dependsOn bintrayUpload
-				}
+			}
+	
+			afterEvaluate {
+				publish.dependsOn bintrayUpload
 			}
 		}
 	}
