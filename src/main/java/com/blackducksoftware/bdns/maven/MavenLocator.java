@@ -58,7 +58,7 @@ public class MavenLocator implements Locator {
             if (url.length() == 0 || url.charAt(url.length() - 1) != '/') {
                 url.append('/');
             }
-            for (String s : identifier.getGroupId().split("\\.")) {
+            for (String s : identifier.getGroupId().split("\\.", 0)) {
                 url.append(s).append('/');
             }
             url.append(identifier.getArtifactId()).append('/');
