@@ -216,6 +216,20 @@ public final class MavenCoordinate implements Identifier {
             return this;
         }
 
+        /**
+         * Conditionally set the packaging and classifier. The packaging will only be set if the classifier is not
+         * {@code null} or it is not the default packaging.
+         */
+        public Builder packagingIfNeeded(CharSequence packaging, CharSequence classifier) {
+            if (classifier != null) {
+                return packaging(packaging).classifier(classifier);
+            } else if (!Objects.equals(packaging, DEFAULT_PACKAGING)) {
+                return packaging(packaging);
+            } else {
+                return this;
+            }
+        }
+
         public MavenCoordinate build() {
             if (classifier != null && packaging == null) {
                 throw new IllegalStateException("packaging is required when using classifier");
