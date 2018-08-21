@@ -73,7 +73,7 @@ public class AliasNamespaceManager extends NamespaceManager {
     /**
      * Returns the type being aliased.
      */
-    public final String aliasOfType() {
+    public final String aliasOf() {
         return namespace;
     }
 
